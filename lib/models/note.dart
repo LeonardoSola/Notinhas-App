@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class Note {
   final int _id;
+  get id => _id;
   final String? title;
   final String content;
   int? _color;

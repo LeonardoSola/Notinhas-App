@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:notinhas_app/screens/home.dart';
-import 'package:notinhas_app/screens/note_form.dart';
 
 void main() => runApp(NotinhasApp());
 
@@ -10,7 +9,8 @@ class NotinhasApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: SafeArea(child: NoteForm()),
+      theme: ThemeData(scaffoldBackgroundColor: const Color(0xFFEAEAEA)),
+      home: SafeArea(child: Home()),
     );
   }
 }

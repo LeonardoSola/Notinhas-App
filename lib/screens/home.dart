@@ -6,6 +6,8 @@ import 'package:notinhas_app/components/noteCard.dart';
 import 'package:notinhas_app/database/dao/notes_dao.dart';
 import 'package:notinhas_app/models/note.dart';
 
+import 'note_form.dart';
+
 class Home extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -26,14 +28,13 @@ class HomeState extends State {
           future: _dao.findAll(),
           builder: (context, snapshot) {
             final List<Note> notes = snapshot.data as List<Note>;
-
             return ListView.builder(
               itemBuilder: (context, index) {
                 if (index == notes.length) {
-                  return NewCard(newState);
+                  return NewCard(newForm);
                 } else {
                   final Note note = notes[index];
-                  return NoteCard(note);
+                  return NoteCard(note, newState);
                 }
               },
               itemCount: notes.length + 1,
@@ -44,14 +45,16 @@ class HomeState extends State {
     );
   }
 
+  void newForm() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NoteForm(0),
+      ),);
+
+  }
+
   void newState() {
-    _dao.save(Note(
-      1,
-      'MAS E SE O TEXTO FOR MUITO GRANDE???????? TIPO MUITO GRANDE MESMO'
-      'mds?',
-      5,
-      title: 'MDS \n UFA',
-    ));
     setState(() {});
   }
 }
@@ -59,6 +62,7 @@ class HomeState extends State {
 // ignore: must_be_immutable
 class NewCard extends StatelessWidget {
   dynamic funcao;
+
   NewCard(this.funcao);
 
   @override

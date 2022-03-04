@@ -28,6 +28,17 @@ class NotesDao {
     return notes;
   }
 
+  Future<Note> find(id) async {
+    final Database db = await getDatabase();
+    final List<Map<String, dynamic>> result = await db.query(
+        _tableName,
+        where: '$_id = ?',
+        whereArgs: [id]);
+    List<Note> note = _toList(result);
+    return note[0];
+  }
+
+
   Map<String, dynamic> _toMap(Note note) {
     final Map<String, dynamic> noteMap = {
       'title': note.title,
@@ -49,6 +60,14 @@ class NotesDao {
       notes.add(note);
     }
     return notes;
+  }
+
+  Future<int> update(int id, String content, String title, int color) async {
+    final Database db = await getDatabase();
+    db.rawQuery(
+      'UPDATE $_tableName SET content = \'${content.replaceAll("'", '"')}\', title = \'${title.replaceAll("'", '"')}\', color = \'${color}\' WHERE id = $id'
+    );
+    return 1;
   }
 
   Future<int> delete(id) async {
