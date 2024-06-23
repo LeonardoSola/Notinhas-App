@@ -1,50 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:notinhas/models/note_color.dart';
+import 'package:notinhas/repositories/note_repository.dart';
 
 class Note {
-  final int _id;
-  get id => _id;
-  final String? title;
-  final String content;
-  int? _color;
+  int? id;
+  String title;
+  String content;
+  String date = DateTime.now().toIso8601String();
+  NoteColors noteColor = NoteColors.yellow;
 
-  Note(this._id, this.content, this._color, {this.title});
+  Note({
+    this.id,
+    this.title = "",
+    this.content = "",
+    this.date = "",
+    this.noteColor = NoteColors.yellow,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      NoteRepository.columnId: id,
+      NoteRepository.columnTitle: title,
+      NoteRepository.columnContent: content,
+      NoteRepository.columnColorId: noteColor.index,
+      NoteRepository.columnDate: date,
+    };
+  }
+
+  static Note fromMap(Map<String, dynamic> map) {
+    return Note(
+      id: map[NoteRepository.columnId],
+      title: map[NoteRepository.columnTitle],
+      content: map[NoteRepository.columnContent],
+      date: map[NoteRepository.columnDate],
+      noteColor: NoteColors.values[map[NoteRepository.columnColorId]],
+    );
+  }
+
+  Color get color => noteColor.color;
+
+  get dateString => DateFormat('dd/MM/yyyy hh:mm').format(DateTime.parse(date));
 
   @override
-  String toString() {
-    // ignore: unnecessary_this
-    return 'Nota: {id:${this._id}, title: ${this.title}, content: ${this.content}, color = ${this._color}}';
-  }
-
-  dynamic get color {
-    switch (_color) {
-      case 1:
-        return const Color(0xffFDFFA4);
-      case 2:
-        return const Color(0xffc1ffa4);
-      case 3:
-        return const Color(0xffFDA4A4);
-      case 4:
-        return const Color(0xffFDA4FF);
-      case 5:
-        return const Color(0xffD1A4FF);
-      case 6:
-        return const Color(0xffB19EFF);
-      case 7:
-        return const Color(0xff99FFF9);
-      case 8:
-        return const Color(0xff81FFC2);
-      case 9:
-        return const Color(0xff8EFFAA);
-      case 10:
-        return const Color(0xffC5FF7C);
-      case 11:
-        return const Color(0xffC89292);
-      case 12:
-        return const Color(0xffD9D9D9);
-    }
-  }
-
-  dynamic getColor() => _color;
-
-  set color(value) => _color = value;
+  String toString() =>
+      'Note{id: $id, title: $title, content: $content, date: $date, noteColor: $noteColor}';
 }
